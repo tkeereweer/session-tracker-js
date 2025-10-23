@@ -21,6 +21,8 @@ export class Time {
 function Timer({
   seconds,
   setSeconds,
+  started,
+  setStarted,
   timerStartDisabled,
   setTimerStartDisabled,
   timerPauseDisabled,
@@ -28,7 +30,6 @@ function Timer({
   timerResetDisabled,
   setTimerResetDisabled,
 }) {
-  const [started, setStarted] = useState(false);
   useEffect(() => {
     const interval = setInterval(() => {
       if (started === true) {
@@ -62,14 +63,26 @@ function Timer({
       <div>
         <h1>Time</h1>
         <h2>{time.toString()}</h2>
-        <button onClick={handleClickStart} disabled={timerStartDisabled}>
-          Start
+        <button
+          className="btn"
+          onClick={handleClickStart}
+          disabled={timerStartDisabled}
+        >
+          <i className="bi bi-play-fill"></i>
         </button>
-        <button onClick={handleClickPause} disabled={timerPauseDisabled}>
-          Pause
+        <button
+          className="btn"
+          onClick={handleClickPause}
+          disabled={timerPauseDisabled}
+        >
+          <i className="bi bi-pause-fill"></i>
         </button>
-        <button onClick={handleClickReset} disabled={timerResetDisabled}>
-          Reset
+        <button
+          className="btn"
+          onClick={handleClickReset}
+          disabled={timerResetDisabled}
+        >
+          <i className="bi bi-arrow-counterclockwise"></i>
         </button>
       </div>
     </div>
@@ -78,6 +91,7 @@ function Timer({
 
 function Sessions({ userData, setUserData, currProj }) {
   const [seconds, setSeconds] = useState(0);
+  const [started, setStarted] = useState(false);
   const [timerStartDisabled, setTimerStartDisabled] = useState(true);
   const [timerPauseDisabled, setTimerPauseDisabled] = useState(true);
   const [timerResetDisabled, setTimerResetDisabled] = useState(true);
@@ -87,9 +101,12 @@ function Sessions({ userData, setUserData, currProj }) {
     localStorage.setItem('user', JSON.stringify(userData));
   }, [userData]);
   const startSession = () => {
-    setTimerStartDisabled(false);
+    setStarted(true);
     setStartSessionDisabled(true);
     setEndSessionDisabled(false);
+    setTimerStartDisabled(true);
+    setTimerPauseDisabled(false);
+    setTimerResetDisabled(false);
   };
   const endSession = (currProj) => {
     if (seconds > 0) {
@@ -113,6 +130,7 @@ function Sessions({ userData, setUserData, currProj }) {
       }));
     }
     setSeconds(0);
+    setStarted(false);
     setTimerStartDisabled(true);
     setTimerPauseDisabled(true);
     setTimerResetDisabled(true);
@@ -150,10 +168,15 @@ function Sessions({ userData, setUserData, currProj }) {
       );
       if (index !== -1) {
         return userData.projects[index].sessions.map((session) => (
-          <li key={session.id}>
-            {session.date} {session.seconds}
-            <button onClick={() => deleteSession(session.id)}>X</button>
-          </li>
+          <tr key={session.id}>
+            <td>{session.date}</td>
+            <td>{session.seconds}</td>
+            <td>
+              <button className="btn" onClick={() => deleteSession(session.id)}>
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </td>
+          </tr>
         ));
       }
     } else {
@@ -165,6 +188,8 @@ function Sessions({ userData, setUserData, currProj }) {
       <Timer
         seconds={seconds}
         setSeconds={setSeconds}
+        started={started}
+        setStarted={setStarted}
         timerStartDisabled={timerStartDisabled}
         setTimerStartDisabled={setTimerStartDisabled}
         timerPauseDisabled={timerPauseDisabled}
@@ -172,16 +197,21 @@ function Sessions({ userData, setUserData, currProj }) {
         timerResetDisabled={timerResetDisabled}
         setTimerResetDisabled={setTimerResetDisabled}
       />
-      <button onClick={() => startSession()} disabled={startSessionDisabled}>
+      <button
+        className="btn"
+        onClick={() => startSession()}
+        disabled={startSessionDisabled}
+      >
         New session
       </button>
       <button
+        className="btn"
         onClick={() => endSession(currProj)}
         disabled={endSessionDisabled}
       >
         End session
       </button>
-      <ul>{listSessions(currProj)}</ul>
+      <table className="table table-hover">{listSessions(currProj)}</table>
     </div>
   );
 }

@@ -1,17 +1,9 @@
 import { useEffect, useState } from 'react';
-import Sessions from './Sessions';
 import { Time } from './Sessions';
 import { v4 as uuid } from 'uuid';
 
-function Projects({ userData, setUserData }) {
+function Projects({ userData, setUserData, currProj, setCurrProj }) {
   const [newProj, setNewProj] = useState('');
-  const [currProj, setCurrProj] = useState(() => {
-    if (userData.projCount > 0) {
-      return userData.projects[0].id;
-    } else {
-      return '';
-    }
-  });
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(userData));
   }, [userData]);
@@ -72,23 +64,25 @@ function Projects({ userData, setUserData }) {
           value={newProj}
           onChange={handleChange}
         />
-        <button type="submit">Add project</button>
+        <button className="btn" type="submit">
+          Add project
+        </button>
       </form>
       <ul>
         {userData.projects.map((project) => (
           <li key={project.id}>
-            <button onClick={() => selectProj(project.id)}>
+            <button
+              className="btn btn-block"
+              onClick={() => selectProj(project.id)}
+            >
               {project.name} {getProjTotalTime(project.id)}
             </button>
-            <button onClick={() => deleteProj(project.id)}>X</button>
+            <button className="btn" onClick={() => deleteProj(project.id)}>
+              <i className="bi bi-x-lg"></i>
+            </button>
           </li>
         ))}
       </ul>
-      <Sessions
-        userData={userData}
-        setUserData={setUserData}
-        currProj={currProj}
-      />
     </div>
   );
 }

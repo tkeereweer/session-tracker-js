@@ -1,0 +1,25 @@
+body {
+  background-color: #242424;
+  color: whitesmoke;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.btn {
+  color: whitesmoke;
+}
+
+.bi-x-lg {
+  color: whitesmoke;
+}
+
+.row.content {
+  height: 100%;
+}
+
+.sidenav {
+  height: 100%;
+  text-align: left;
+}
