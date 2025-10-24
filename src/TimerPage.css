@@ -5,6 +5,7 @@ body {
 
 ul {
   list-style-type: none;
+  padding-left: 0px;
 }
 
 .btn {
@@ -20,6 +21,7 @@ ul {
 }
 
 .sidenav {
-  height: 100%;
+  height: auto;
   text-align: left;
+  border-right-style: solid;
 }

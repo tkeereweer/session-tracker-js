@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
+import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
 
 export class Time {
   sec;
   min;
   hour;
   constructor(seconds) {
-    this.sec = seconds;
+    this.sec = (seconds % 3600) % 60;
     this.min = Math.floor((seconds % 3600) / 60);
     this.hour = Math.floor(seconds / 3600);
   }
@@ -16,6 +17,105 @@ export class Time {
     str = str.concat(this.sec.toString().padStart(2, '0'));
     return str;
   }
+}
+
+function HandleClickIncr({seconds, setSeconds, timerEditDisabled}) {
+  const [addTime, setAddTime] = useState(0);
+  function handleAddTimeSubmit(event) {
+    event.preventDefault();
+    setSeconds(Number(seconds) + Number(addTime) * 60);
+  }
+  function handleAddTimeChange(event) {
+    setAddTime(event.target.value);
+  }
+  const popover = (
+    <Popover id="timer-incr-popover">
+      <Popover.Header as="h4">Add time to timer</Popover.Header>
+      <Popover.Body>
+        <form onSubmit={handleAddTimeSubmit}>
+          <div className="mb-2">
+            <label htmlFor='addTime' className='from-label'>Add minutes</label>
+            <input
+              type="number"
+              className="form-control form-control-sm"
+              id="mins"
+              name="mins"
+              value={addTime}
+              onChange={handleAddTimeChange}
+            />
+          </div>
+          <Button variant="primary" size="sm" type="submit">
+            Add time
+          </Button>
+        </form>
+      </Popover.Body>
+    </Popover>
+  );
+  return (
+    <OverlayTrigger
+      trigger="click"
+      placement="bottom"
+      overlay={popover}
+      rootCloseEvent='mousedown'
+      rootClose={true}
+    >
+      <Button variant="info" disabled={timerEditDisabled}>
+        <i className="bi bi-plus-circle"></i>
+      </Button>
+    </OverlayTrigger>
+  );
+}
+
+function HandleClickDecr({seconds, setSeconds, timerEditDisabled}) {
+  const [decrTime, setDecrTime] = useState(0);
+  function handleDecrTimeSubmit(event) {
+    event.preventDefault();
+    if (Number(seconds) - Number(decrTime) * 60 <= 0) {
+      setSeconds(0);
+    }
+    else {
+      setSeconds(Number(seconds) - Number(decrTime) * 60);
+    }
+  }
+  function handleDecrTimeChange(event) {
+    setDecrTime(event.target.value);
+  }
+  const popover = (
+    <Popover id="timer-decr-popover">
+      <Popover.Header as="h4">Remove time from timer</Popover.Header>
+      <Popover.Body>
+        <form onSubmit={handleDecrTimeSubmit}>
+          <div className="mb-2">
+            <label htmlFor='addTime' className='from-label'>Remove minutes</label>
+            <input
+              type="number"
+              className="form-control form-control-sm"
+              id="mins"
+              name="mins"
+              value={decrTime}
+              onChange={handleDecrTimeChange}
+            />
+          </div>
+          <Button variant="primary" size="sm" type="submit">
+            Remove time
+          </Button>
+        </form>
+      </Popover.Body>
+    </Popover>
+  );
+  return (
+    <OverlayTrigger
+      trigger="click"
+      placement="bottom"
+      overlay={popover}
+      rootCloseEvent='mousedown'
+      rootClose={true}
+    >
+      <Button variant="info" disabled={timerEditDisabled}>
+        <i className="bi bi-dash-circle"></i>
+      </Button>
+    </OverlayTrigger>
+  );
 }
 
 function Timer({
@@ -29,6 +129,8 @@ function Timer({
   setTimerPauseDisabled,
   timerResetDisabled,
   setTimerResetDisabled,
+  timerEditDisabled,
+  setTimerEditDisabled,
 }) {
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +141,7 @@ function Timer({
     return () => clearInterval(interval);
   }, [started, seconds, setSeconds]);
   const time = new Time(seconds);
+  function handleClickDecr() {}
   function handleClickStart() {
     setStarted(true);
     setTimerStartDisabled(true);
@@ -61,8 +164,12 @@ function Timer({
   return (
     <div>
       <div>
-        <h1>Time</h1>
-        <h2>{time.toString()}</h2>
+        <h1>Timer</h1>
+        <div>
+          <h2>{time.toString()}</h2>
+          <HandleClickIncr seconds={seconds} setSeconds={setSeconds} timerEditDisabled={timerEditDisabled}/>
+          <HandleClickDecr seconds={seconds} setSeconds={setSeconds} timerEditDisabled={timerEditDisabled}/>
+        </div>
         <button
           className="btn"
           onClick={handleClickStart}
@@ -97,6 +204,7 @@ function Sessions({ userData, setUserData, currProj }) {
   const [timerResetDisabled, setTimerResetDisabled] = useState(true);
   const [startSessionDisabled, setStartSessionDisabled] = useState(false);
   const [endSessionDisabled, setEndSessionDisabled] = useState(true);
+  const [timerEditDisabled, setTimerEditDisabled] = useState(true);
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(userData));
   }, [userData]);
@@ -107,6 +215,7 @@ function Sessions({ userData, setUserData, currProj }) {
     setTimerStartDisabled(true);
     setTimerPauseDisabled(false);
     setTimerResetDisabled(false);
+    setTimerEditDisabled(false);
   };
   const endSession = (currProj) => {
     if (seconds > 0) {
@@ -121,7 +230,14 @@ function Sessions({ userData, setUserData, currProj }) {
                   {
                     id: uuid(),
                     seconds: seconds,
-                    date: Date(),
+                    date:
+                      new Date().toDateString() +
+                      ' ' +
+                      new Date().getHours() +
+                      ':' +
+                      new Date().getMinutes() +
+                      ':' +
+                      new Date().getSeconds(),
                   },
                 ],
               }
@@ -136,6 +252,7 @@ function Sessions({ userData, setUserData, currProj }) {
     setTimerResetDisabled(true);
     setEndSessionDisabled(true);
     setStartSessionDisabled(false);
+    setTimerEditDisabled(true);
   };
   function deleteSession(sessionId) {
     const indexP = userData.projects.findIndex(
@@ -170,7 +287,7 @@ function Sessions({ userData, setUserData, currProj }) {
         return userData.projects[index].sessions.map((session) => (
           <tr key={session.id}>
             <td>{session.date}</td>
-            <td>{session.seconds}</td>
+            <td>{new Time(session.seconds).toString()}</td>
             <td>
               <button className="btn" onClick={() => deleteSession(session.id)}>
                 <i className="bi bi-x-lg"></i>
@@ -196,6 +313,8 @@ function Sessions({ userData, setUserData, currProj }) {
         setTimerPauseDisabled={setTimerPauseDisabled}
         timerResetDisabled={timerResetDisabled}
         setTimerResetDisabled={setTimerResetDisabled}
+        timerEditDisabled={timerEditDisabled}
+        setTimerEditDisabled={setTimerEditDisabled}
       />
       <button
         className="btn"
@@ -211,7 +330,9 @@ function Sessions({ userData, setUserData, currProj }) {
       >
         End session
       </button>
-      <table className="table table-hover">{listSessions(currProj)}</table>
+      <table className="table table-hover">
+        <tbody>{listSessions(currProj)}</tbody>
+      </table>
     </div>
   );
 }
