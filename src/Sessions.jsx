@@ -19,6 +19,11 @@ function Sessions({ userData, setUserData, currProj }) {
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(userData));
   }, [userData]);
+  // useEffect(() => {
+  //   if (seconds == 3600) {
+  //     ThrowConfetti();
+  //   }
+  // }, [seconds]);
   const startSession = () => {
     setStarted(true);
     setStartSessionDisabled(true);
@@ -28,6 +33,12 @@ function Sessions({ userData, setUserData, currProj }) {
     setTimerResetDisabled(false);
     setTimerEditDisabled(false);
   };
+  // function ThrowConfetti() {
+  //   const { width, height } = useWindowSize();
+  //   return (
+  //     <ReactConfetti width={width} height={height}/>
+  //   )
+  // }
   const endSession = (currProj) => {
     if (seconds > 0) {
       setUserData((prev) => ({
@@ -178,9 +189,6 @@ function Sessions({ userData, setUserData, currProj }) {
           End session
         </button>
       </div>
-      <table className="table table-hover">
-        <tbody>{listSessions(currProj)}</tbody>
-      </table>
       <div>
         <Button variant="primary" onClick={handleShowAddSession}>
           <i className="bi bi-plus-circle me-2"></i>
@@ -220,6 +228,9 @@ function Sessions({ userData, setUserData, currProj }) {
           </Modal.Footer>
         </Modal>
       </div>
+      <table className="table table-hover">
+        <tbody>{listSessions(currProj)}</tbody>
+      </table>
     </div>
   );
 }

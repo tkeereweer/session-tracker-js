@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './TimerPage.css';
 import Projects from './Projects.jsx';
-import Sessions from './Sessions';
+import Sessions from './Sessions.jsx';
 
 function TimerPage() {
   const [userData, setUserData] = useState(() => {
