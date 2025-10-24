@@ -126,7 +126,7 @@ function Sessions({ userData, setUserData, currProj }) {
                   ...project.sessions,
                   {
                     id: uuid(),
-                    seconds: addSessionMins,
+                    seconds: addSessionMins * 60,
                     date:
                       new Date(addSessionDate).toDateString() +
                       ' ' +
@@ -146,7 +146,7 @@ function Sessions({ userData, setUserData, currProj }) {
     setAddSessionMins(0);
   }
   return (
-    <div>
+    <div className="main-content">
       <Timer
         seconds={seconds}
         setSeconds={setSeconds}
@@ -160,25 +160,30 @@ function Sessions({ userData, setUserData, currProj }) {
         setTimerResetDisabled={setTimerResetDisabled}
         timerEditDisabled={timerEditDisabled}
       />
-      <button
-        className="btn"
-        onClick={() => startSession()}
-        disabled={startSessionDisabled}
-      >
-        New session
-      </button>
-      <button
-        className="btn"
-        onClick={() => endSession(currProj)}
-        disabled={endSessionDisabled}
-      >
-        End session
-      </button>
+      <div className="session-controls">
+        <button
+          className="btn btn-success"
+          onClick={() => startSession()}
+          disabled={startSessionDisabled}
+        >
+          <i className="bi bi-play-fill me-2"></i>
+          New session
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => endSession(currProj)}
+          disabled={endSessionDisabled}
+        >
+          <i className="bi bi-stop-fill me-2"></i>
+          End session
+        </button>
+      </div>
       <table className="table table-hover">
         <tbody>{listSessions(currProj)}</tbody>
       </table>
       <div>
         <Button variant="primary" onClick={handleShowAddSession}>
+          <i className="bi bi-plus-circle me-2"></i>
           Add a session
         </Button>
         <Modal show={showAddSession} onHide={handleCloseAddSession}>
@@ -194,6 +199,8 @@ function Sessions({ userData, setUserData, currProj }) {
                   value={addSessionDate}
                   onChange={(e) => setAddSessionDate(e.target.value)}
                 />
+              </Form.Group>
+              <Form.Group className="mb-3">
                 <Form.Label>Minutes</Form.Label>
                 <Form.Control
                   type="number"

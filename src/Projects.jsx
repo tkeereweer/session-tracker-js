@@ -57,27 +57,39 @@ function Projects({ userData, setUserData, currProj, setCurrProj }) {
   }
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <h3>Projects</h3>
+      <form className="project-form" onSubmit={handleSubmit}>
         <input
           id="newProj"
           type="text"
+          placeholder="New project name"
           value={newProj}
           onChange={handleChange}
         />
-        <button className="btn" type="submit">
+        <button className="btn btn-primary w-100" type="submit">
+          <i className="bi bi-plus-circle me-2"></i>
           Add project
         </button>
       </form>
-      <ul>
+      <ul className="project-list">
         {userData.projects.map((project) => (
-          <li key={project.id}>
+          <li
+            key={project.id}
+            className={`project-item ${currProj === project.id ? 'active' : ''}`}
+            onClick={() => selectProj(project.id)}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="project-item-content">
+              <div className="project-name">{project.name}</div>
+              <div className="project-time">{getProjTotalTime(project.id)}</div>
+            </div>
             <button
-              className="btn btn-block"
-              onClick={() => selectProj(project.id)}
+              className="project-delete"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteProj(project.id);
+              }}
             >
-              {project.name} {getProjTotalTime(project.id)}
-            </button>
-            <button className="btn" onClick={() => deleteProj(project.id)}>
               <i className="bi bi-x-lg"></i>
             </button>
           </li>

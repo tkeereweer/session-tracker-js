@@ -20,10 +20,12 @@ export class Time {
 
 function HandleClickIncr({ seconds, setSeconds, timerEditDisabled }) {
   const [addTime, setAddTime] = useState(0);
+  const [show, setShow] = useState(false);
   function handleAddTimeSubmit(event) {
     event.preventDefault();
     setSeconds(Number(seconds) + Number(addTime) * 60);
     setAddTime(0);
+    setShow(false);
   }
   function handleAddTimeChange(event) {
     setAddTime(event.target.value);
@@ -60,6 +62,8 @@ function HandleClickIncr({ seconds, setSeconds, timerEditDisabled }) {
       overlay={popover}
       rootCloseEvent="mousedown"
       rootClose={true}
+      show={show}
+      onToggle={(nextShow) => setShow(nextShow)}
     >
       <Button variant="info" disabled={timerEditDisabled}>
         <i className="bi bi-plus-circle"></i>
@@ -70,6 +74,7 @@ function HandleClickIncr({ seconds, setSeconds, timerEditDisabled }) {
 
 function HandleClickDecr({ seconds, setSeconds, timerEditDisabled }) {
   const [decrTime, setDecrTime] = useState(0);
+  const [show, setShow] = useState(false);
   function handleDecrTimeSubmit(event) {
     event.preventDefault();
     if (Number(seconds) - Number(decrTime) * 60 <= 0) {
@@ -78,6 +83,7 @@ function HandleClickDecr({ seconds, setSeconds, timerEditDisabled }) {
       setSeconds(Number(seconds) - Number(decrTime) * 60);
     }
     setDecrTime(0);
+    setShow(false);
   }
   function handleDecrTimeChange(event) {
     setDecrTime(event.target.value);
@@ -114,6 +120,8 @@ function HandleClickDecr({ seconds, setSeconds, timerEditDisabled }) {
       overlay={popover}
       rootCloseEvent="mousedown"
       rootClose={true}
+      show={show}
+      onToggle={(nextShow) => setShow(nextShow)}
     >
       <Button variant="info" disabled={timerEditDisabled}>
         <i className="bi bi-dash-circle"></i>
@@ -164,38 +172,38 @@ function Timer({
     setTimerResetDisabled(true);
   }
   return (
-    <div>
-      <div>
-        <h1>Timer</h1>
-        <div>
-          <h2>{time.toString()}</h2>
-          <HandleClickIncr
-            seconds={seconds}
-            setSeconds={setSeconds}
-            timerEditDisabled={timerEditDisabled}
-          />
-          <HandleClickDecr
-            seconds={seconds}
-            setSeconds={setSeconds}
-            timerEditDisabled={timerEditDisabled}
-          />
-        </div>
+    <div className="timer-card">
+      <div className="timer-header">Timer</div>
+      <div className="timer-display">{time.toString()}</div>
+      <div className="timer-edit-controls">
+        <HandleClickIncr
+          seconds={seconds}
+          setSeconds={setSeconds}
+          timerEditDisabled={timerEditDisabled}
+        />
+        <HandleClickDecr
+          seconds={seconds}
+          setSeconds={setSeconds}
+          timerEditDisabled={timerEditDisabled}
+        />
+      </div>
+      <div className="timer-controls">
         <button
-          className="btn"
+          className="btn btn-icon"
           onClick={handleClickStart}
           disabled={timerStartDisabled}
         >
           <i className="bi bi-play-fill"></i>
         </button>
         <button
-          className="btn"
+          className="btn btn-icon"
           onClick={handleClickPause}
           disabled={timerPauseDisabled}
         >
           <i className="bi bi-pause-fill"></i>
         </button>
         <button
-          className="btn"
+          className="btn btn-icon"
           onClick={handleClickReset}
           disabled={timerResetDisabled}
         >

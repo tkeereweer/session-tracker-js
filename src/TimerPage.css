@@ -1,6 +1,36 @@
+:root {
+  /* Modern Developer Color Scheme */
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --bg-hover: #30363d;
+
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+
+  --accent-primary: #58a6ff;
+  --accent-hover: #79b8ff;
+  --accent-success: #3fb950;
+  --accent-danger: #f85149;
+
+  --border-color: #30363d;
+  --border-subtle: #21262d;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+}
+
+/* Typography & Global Styles */
 body {
-  background-color: #242424;
-  color: whitesmoke;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.6;
 }
 
 ul {
@@ -8,20 +38,476 @@ ul {
   padding-left: 0px;
 }
 
+/* Navbar Styles */
+.navbar {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 10;
+}
+
+.navbar .nav-item {
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.navbar .nav-item:hover {
+  color: var(--accent-primary);
+}
+
+/* Button Styles */
 .btn {
-  color: whitesmoke;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.btn:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+.btn-success {
+  background-color: var(--accent-success);
+  border-color: var(--accent-success);
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #2ea043;
+  border-color: #2ea043;
+}
+
+.btn-danger {
+  background-color: var(--accent-danger);
+  border-color: var(--accent-danger);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #da3633;
+  border-color: #da3633;
+}
+
+.btn-icon {
+  padding: 0.5rem;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.btn i {
+  font-size: 1.2rem;
 }
 
 .bi-x-lg {
-  color: whitesmoke;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: 1rem;
 }
 
+.bi-x-lg:hover {
+  color: var(--accent-danger);
+}
+
+/* Layout */
 .row.content {
   height: 100%;
+  margin: 0;
+  gap: 0;
 }
 
+.col-lg-3, .col-lg-9 {
+  padding: 0;
+}
+
+.col-lg-3 {
+  background-color: var(--bg-secondary);
+}
+
+.col-lg-9 {
+  background-color: var(--bg-primary);
+}
+
+/* Sidebar Styles */
 .sidenav {
-  height: auto;
+  height: 100vh;
   text-align: left;
-  border-right-style: solid;
+  border-right: none;
+  background-color: var(--bg-secondary);
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidenav h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+/* Projects Sidebar */
+.project-form {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.project-form input {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--border-radius);
+  width: 100%;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.project-form input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background-color: var(--bg-hover);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+}
+
+.project-list {
+  margin-top: 1rem;
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 0.75rem;
+  margin-bottom: 0.375rem;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+}
+
+.project-item:hover {
+  background-color: var(--bg-tertiary);
+  border-color: transparent;
+}
+
+.project-item.active {
+  background-color: var(--bg-tertiary);
+  border-left: 3px solid var(--accent-primary);
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.project-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.project-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.project-time {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+.project-delete {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.project-item:hover .project-delete {
+  opacity: 1;
+}
+
+/* Main Content Area */
+.main-content {
+  padding: 2rem 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Timer Card */
+.timer-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.timer-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.timer-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.timer-display {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 4.5rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin: 1rem 0;
+  letter-spacing: 0.05em;
+}
+
+.timer-edit-controls {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.timer-controls .btn {
+  min-width: 60px;
+  font-size: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+}
+
+/* Session Controls */
+.session-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.session-controls .btn {
+  flex: 1;
+  max-width: 200px;
+}
+
+/* Table Styles */
+.table {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.table td {
+  padding: 1rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+  border-top: none;
+}
+
+.table td:first-child {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.table td:nth-child(2) {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  color: var(--accent-primary);
+  font-weight: 500;
+  text-align: right;
+}
+
+.table td:last-child {
+  text-align: right;
+  width: 60px;
+}
+
+/* Modal Styles */
+.modal-content {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+.modal-title {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+}
+
+.form-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  background-color: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+  outline: none;
+}
+
+/* Popover Styles */
+.popover {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.popover-header {
+  background-color: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+}
+
+.popover-body {
+  color: var(--text-primary);
+  padding: 1rem;
+}
+
+/* Utility Classes */
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+/* Additional Bootstrap Icon Styles */
+.btn i.bi {
+  vertical-align: middle;
+}
+
+/* Close button in modal */
+.btn-close {
+  filter: invert(1);
+  opacity: 0.5;
+}
+
+.btn-close:hover {
+  opacity: 1;
+}
+
+/* Empty state */
+.table tbody:empty::after {
+  content: 'No sessions yet. Start tracking your time!';
+  display: table-cell;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-style: italic;
 }
