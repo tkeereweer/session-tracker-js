@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Time } from './Sessions';
+import { Time } from './Timer';
 import { v4 as uuid } from 'uuid';
 
 function Projects({ userData, setUserData, currProj, setCurrProj }) {
@@ -39,7 +39,7 @@ function Projects({ userData, setUserData, currProj, setCurrProj }) {
       (project) => project.id === projId
     );
     userData.projects[index].sessions.map((session) => {
-      sum += session.seconds;
+      sum += Number(session.seconds);
     });
     const time = new Time(sum);
     return time.toString();
