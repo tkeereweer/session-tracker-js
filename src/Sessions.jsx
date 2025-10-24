@@ -19,11 +19,12 @@ export class Time {
   }
 }
 
-function HandleClickIncr({seconds, setSeconds, timerEditDisabled}) {
+function HandleClickIncr({ seconds, setSeconds, timerEditDisabled }) {
   const [addTime, setAddTime] = useState(0);
   function handleAddTimeSubmit(event) {
     event.preventDefault();
     setSeconds(Number(seconds) + Number(addTime) * 60);
+    setAddTime(0);
   }
   function handleAddTimeChange(event) {
     setAddTime(event.target.value);
@@ -34,7 +35,9 @@ function HandleClickIncr({seconds, setSeconds, timerEditDisabled}) {
       <Popover.Body>
         <form onSubmit={handleAddTimeSubmit}>
           <div className="mb-2">
-            <label htmlFor='addTime' className='from-label'>Add minutes</label>
+            <label htmlFor="addTime" className="from-label">
+              Add minutes
+            </label>
             <input
               type="number"
               className="form-control form-control-sm"
@@ -56,7 +59,7 @@ function HandleClickIncr({seconds, setSeconds, timerEditDisabled}) {
       trigger="click"
       placement="bottom"
       overlay={popover}
-      rootCloseEvent='mousedown'
+      rootCloseEvent="mousedown"
       rootClose={true}
     >
       <Button variant="info" disabled={timerEditDisabled}>
@@ -66,16 +69,16 @@ function HandleClickIncr({seconds, setSeconds, timerEditDisabled}) {
   );
 }
 
-function HandleClickDecr({seconds, setSeconds, timerEditDisabled}) {
+function HandleClickDecr({ seconds, setSeconds, timerEditDisabled }) {
   const [decrTime, setDecrTime] = useState(0);
   function handleDecrTimeSubmit(event) {
     event.preventDefault();
     if (Number(seconds) - Number(decrTime) * 60 <= 0) {
       setSeconds(0);
-    }
-    else {
+    } else {
       setSeconds(Number(seconds) - Number(decrTime) * 60);
     }
+    setDecrTime(0);
   }
   function handleDecrTimeChange(event) {
     setDecrTime(event.target.value);
@@ -86,7 +89,9 @@ function HandleClickDecr({seconds, setSeconds, timerEditDisabled}) {
       <Popover.Body>
         <form onSubmit={handleDecrTimeSubmit}>
           <div className="mb-2">
-            <label htmlFor='addTime' className='from-label'>Remove minutes</label>
+            <label htmlFor="addTime" className="from-label">
+              Remove minutes
+            </label>
             <input
               type="number"
               className="form-control form-control-sm"
@@ -108,7 +113,7 @@ function HandleClickDecr({seconds, setSeconds, timerEditDisabled}) {
       trigger="click"
       placement="bottom"
       overlay={popover}
-      rootCloseEvent='mousedown'
+      rootCloseEvent="mousedown"
       rootClose={true}
     >
       <Button variant="info" disabled={timerEditDisabled}>
@@ -130,7 +135,6 @@ function Timer({
   timerResetDisabled,
   setTimerResetDisabled,
   timerEditDisabled,
-  setTimerEditDisabled,
 }) {
   useEffect(() => {
     const interval = setInterval(() => {
@@ -141,7 +145,6 @@ function Timer({
     return () => clearInterval(interval);
   }, [started, seconds, setSeconds]);
   const time = new Time(seconds);
-  function handleClickDecr() {}
   function handleClickStart() {
     setStarted(true);
     setTimerStartDisabled(true);
@@ -167,8 +170,16 @@ function Timer({
         <h1>Timer</h1>
         <div>
           <h2>{time.toString()}</h2>
-          <HandleClickIncr seconds={seconds} setSeconds={setSeconds} timerEditDisabled={timerEditDisabled}/>
-          <HandleClickDecr seconds={seconds} setSeconds={setSeconds} timerEditDisabled={timerEditDisabled}/>
+          <HandleClickIncr
+            seconds={seconds}
+            setSeconds={setSeconds}
+            timerEditDisabled={timerEditDisabled}
+          />
+          <HandleClickDecr
+            seconds={seconds}
+            setSeconds={setSeconds}
+            timerEditDisabled={timerEditDisabled}
+          />
         </div>
         <button
           className="btn"
@@ -314,7 +325,6 @@ function Sessions({ userData, setUserData, currProj }) {
         timerResetDisabled={timerResetDisabled}
         setTimerResetDisabled={setTimerResetDisabled}
         timerEditDisabled={timerEditDisabled}
-        setTimerEditDisabled={setTimerEditDisabled}
       />
       <button
         className="btn"
