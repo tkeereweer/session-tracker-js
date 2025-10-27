@@ -9,7 +9,6 @@ function DashboardPage() {
     }
     return {
       id: 0,
-      projCount: 0,
       projects: [],
     };
   });

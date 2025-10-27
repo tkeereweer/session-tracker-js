@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Time } from './Timer';
+import { useApp } from './AppContext';
+import { useState } from 'react';
+import { getProjTotalTime } from './utils/time';
 import { v4 as uuid } from 'uuid';
 
-function Projects({ userData, setUserData, currProj, setCurrProj }) {
+function Projects() {
+  const { userData, setUserData, currProj, setCurrProj } = useApp();
   const [newProj, setNewProj] = useState('');
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(userData));
-  }, [userData]);
   function handleChange(event) {
     setNewProj(event.target.value);
   }
@@ -16,7 +15,6 @@ function Projects({ userData, setUserData, currProj, setCurrProj }) {
     if (newProj.length > 0) {
       setUserData((prev) => ({
         ...prev,
-        projCount: prev.projCount + 1,
         projects: [
           ...prev.projects,
           {
@@ -33,22 +31,10 @@ function Projects({ userData, setUserData, currProj, setCurrProj }) {
   function selectProj(id) {
     setCurrProj(id);
   }
-  function getProjTotalTime(projId) {
-    let sum = 0;
-    const index = userData.projects.findIndex(
-      (project) => project.id === projId
-    );
-    userData.projects[index].sessions.map((session) => {
-      sum += Number(session.seconds);
-    });
-    const time = new Time(sum);
-    return time.toString();
-  }
   function deleteProj(id) {
     const index = userData.projects.findIndex((project) => project.id === id);
     setUserData((prev) => ({
       ...prev,
-      projCount: prev.projCount - 1,
       projects: [
         ...prev.projects.slice(0, index),
         ...prev.projects.slice(index + 1),
@@ -81,7 +67,9 @@ function Projects({ userData, setUserData, currProj, setCurrProj }) {
           >
             <div className="project-item-content">
               <div className="project-name">{project.name}</div>
-              <div className="project-time">{getProjTotalTime(project.id)}</div>
+              <div className="project-time">
+                {getProjTotalTime(project.id, userData)}
+              </div>
             </div>
             <button
               className="project-delete"

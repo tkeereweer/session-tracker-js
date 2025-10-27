@@ -1,44 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useApp } from './AppContext';
+import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { Button, Modal, Form } from 'react-bootstrap';
-import { Time } from './Timer';
+import { Time } from './utils/time';
 import Timer from './Timer';
+import { SESSION_STATE, TIMER_STATE } from './constants/timer';
 
-function Sessions({ userData, setUserData, currProj }) {
+function Sessions() {
+  const { userData, setUserData, currProj, setCurrProj } = useApp();
   const [seconds, setSeconds] = useState(0);
-  const [started, setStarted] = useState(false);
-  const [timerStartDisabled, setTimerStartDisabled] = useState(true);
-  const [timerPauseDisabled, setTimerPauseDisabled] = useState(true);
-  const [timerResetDisabled, setTimerResetDisabled] = useState(true);
-  const [startSessionDisabled, setStartSessionDisabled] = useState(false);
-  const [endSessionDisabled, setEndSessionDisabled] = useState(true);
-  const [timerEditDisabled, setTimerEditDisabled] = useState(true);
+  const [timerState, setTimerState] = useState(TIMER_STATE.IDLE);
+  const [sessionState, setSessionState] = useState(SESSION_STATE.NO_SESSION);
   const [showAddSession, setShowAddSession] = useState(false);
   const [addSessionDate, setAddSessionDate] = useState();
   const [addSessionMins, setAddSessionMins] = useState(0);
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(userData));
-  }, [userData]);
-  // useEffect(() => {
-  //   if (seconds == 3600) {
-  //     ThrowConfetti();
-  //   }
-  // }, [seconds]);
   const startSession = () => {
-    setStarted(true);
-    setStartSessionDisabled(true);
-    setEndSessionDisabled(false);
-    setTimerStartDisabled(true);
-    setTimerPauseDisabled(false);
-    setTimerResetDisabled(false);
-    setTimerEditDisabled(false);
+    setSessionState(SESSION_STATE.IN_SESSION);
+    setTimerState(TIMER_STATE.RUNNING);
   };
-  // function ThrowConfetti() {
-  //   const { width, height } = useWindowSize();
-  //   return (
-  //     <ReactConfetti width={width} height={height}/>
-  //   )
-  // }
   const endSession = (currProj) => {
     if (seconds > 0) {
       setUserData((prev) => ({
@@ -67,14 +46,9 @@ function Sessions({ userData, setUserData, currProj }) {
         ),
       }));
     }
+    setSessionState(SESSION_STATE.NO_SESSION);
+    setTimerState(TIMER_STATE.IDLE);
     setSeconds(0);
-    setStarted(false);
-    setTimerStartDisabled(true);
-    setTimerPauseDisabled(true);
-    setTimerResetDisabled(true);
-    setEndSessionDisabled(true);
-    setStartSessionDisabled(false);
-    setTimerEditDisabled(true);
   };
   function deleteSession(sessionId) {
     const indexP = userData.projects.findIndex(
@@ -101,7 +75,7 @@ function Sessions({ userData, setUserData, currProj }) {
     }
   }
   function listSessions(currProj) {
-    if (userData.projCount > 0) {
+    if (userData.projects.length > 0) {
       const index = userData.projects.findIndex(
         (project) => project.id === currProj
       );
@@ -161,21 +135,15 @@ function Sessions({ userData, setUserData, currProj }) {
       <Timer
         seconds={seconds}
         setSeconds={setSeconds}
-        started={started}
-        setStarted={setStarted}
-        timerStartDisabled={timerStartDisabled}
-        setTimerStartDisabled={setTimerStartDisabled}
-        timerPauseDisabled={timerPauseDisabled}
-        setTimerPauseDisabled={setTimerPauseDisabled}
-        timerResetDisabled={timerResetDisabled}
-        setTimerResetDisabled={setTimerResetDisabled}
-        timerEditDisabled={timerEditDisabled}
+        sessionState={sessionState}
+        timerState={timerState}
+        setTimerState={setTimerState}
       />
       <div className="session-controls">
         <button
           className="btn btn-success"
           onClick={() => startSession()}
-          disabled={startSessionDisabled}
+          disabled={sessionState !== SESSION_STATE.NO_SESSION}
         >
           <i className="bi bi-play-fill me-2"></i>
           New session
@@ -183,7 +151,7 @@ function Sessions({ userData, setUserData, currProj }) {
         <button
           className="btn btn-danger"
           onClick={() => endSession(currProj)}
-          disabled={endSessionDisabled}
+          disabled={sessionState !== SESSION_STATE.IN_SESSION}
         >
           <i className="bi bi-stop-fill me-2"></i>
           End session

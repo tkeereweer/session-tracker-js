@@ -1,22 +1,7 @@
+import { Time } from './utils/time';
 import { useState, useEffect } from 'react';
 import { OverlayTrigger, Popover, Button } from 'react-bootstrap';
-
-export class Time {
-  sec;
-  min;
-  hour;
-  constructor(seconds) {
-    this.sec = (seconds % 3600) % 60;
-    this.min = Math.floor((seconds % 3600) / 60);
-    this.hour = Math.floor(seconds / 3600);
-  }
-  toString() {
-    let str = this.hour.toString().padStart(2, '0') + ':';
-    str = str.concat(this.min.toString().padStart(2, '0'), ':');
-    str = str.concat(this.sec.toString().padStart(2, '0'));
-    return str;
-  }
-}
+import { SESSION_STATE, TIMER_STATE } from './constants/timer';
 
 function HandleClickIncr({ seconds, setSeconds, timerEditDisabled }) {
   const [addTime, setAddTime] = useState(0);
@@ -133,44 +118,35 @@ function HandleClickDecr({ seconds, setSeconds, timerEditDisabled }) {
 function Timer({
   seconds,
   setSeconds,
-  started,
-  setStarted,
-  timerStartDisabled,
-  setTimerStartDisabled,
-  timerPauseDisabled,
-  setTimerPauseDisabled,
-  timerResetDisabled,
-  setTimerResetDisabled,
-  timerEditDisabled,
+  sessionState,
+  timerState,
+  setTimerState,
 }) {
   useEffect(() => {
     const interval = setInterval(() => {
-      if (started === true) {
-        setSeconds(seconds + 1);
+      if (timerState === TIMER_STATE.RUNNING) {
+        setSeconds((prevSeconds) => prevSeconds + 1);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [started, seconds, setSeconds]);
+  }, [setSeconds, timerState]);
   const time = new Time(seconds);
   function handleClickStart() {
-    setStarted(true);
-    setTimerStartDisabled(true);
-    setTimerPauseDisabled(false);
-    setTimerResetDisabled(false);
+    setTimerState(TIMER_STATE.RUNNING);
   }
   function handleClickPause() {
-    setStarted(false);
-    setTimerStartDisabled(false);
-    setTimerPauseDisabled(true);
-    setTimerResetDisabled(false);
+    setTimerState(TIMER_STATE.PAUSED);
   }
   function handleClickReset() {
-    setStarted(false);
     setSeconds(0);
-    setTimerStartDisabled(false);
-    setTimerPauseDisabled(true);
-    setTimerResetDisabled(true);
+    setTimerState(TIMER_STATE.IDLE);
   }
+  const isStartDisabled =
+    timerState === TIMER_STATE.RUNNING ||
+    sessionState === SESSION_STATE.NO_SESSION;
+  const isPauseDisabled = timerState !== TIMER_STATE.RUNNING;
+  const isResetDisabled = timerState === TIMER_STATE.IDLE;
+  const isEditDisabled = sessionState !== SESSION_STATE.IN_SESSION;
   return (
     <div className="timer-card">
       <div className="timer-header">Timer</div>
@@ -179,33 +155,33 @@ function Timer({
         <HandleClickIncr
           seconds={seconds}
           setSeconds={setSeconds}
-          timerEditDisabled={timerEditDisabled}
+          timerEditDisabled={isEditDisabled}
         />
         <HandleClickDecr
           seconds={seconds}
           setSeconds={setSeconds}
-          timerEditDisabled={timerEditDisabled}
+          timerEditDisabled={isEditDisabled}
         />
       </div>
       <div className="timer-controls">
         <button
           className="btn btn-icon"
           onClick={handleClickStart}
-          disabled={timerStartDisabled}
+          disabled={isStartDisabled}
         >
           <i className="bi bi-play-fill"></i>
         </button>
         <button
           className="btn btn-icon"
           onClick={handleClickPause}
-          disabled={timerPauseDisabled}
+          disabled={isPauseDisabled}
         >
           <i className="bi bi-pause-fill"></i>
         </button>
         <button
           className="btn btn-icon"
           onClick={handleClickReset}
-          disabled={timerResetDisabled}
+          disabled={isResetDisabled}
         >
           <i className="bi bi-arrow-counterclockwise"></i>
         </button>
